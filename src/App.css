@@ -1,0 +1,32 @@
+.main-content {
+  position: relative;
+  z-index: 1;
+  margin-top: 100vh;
+  background: var(--bg);
+  background-image:
+    radial-gradient(ellipse 80% 40% at 50% 0%, rgba(255, 225, 53, 0.07) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 30% at 0% 50%, rgba(255, 248, 231, 0.04) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 30% at 100% 80%, rgba(245, 197, 24, 0.05) 0%, transparent 60%);
+}
+
+.page-collage {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 0;
+}
+
+.collage-photo {
+  position: absolute;
+  border: 6px solid rgba(255, 255, 255, 0.92);
+  box-shadow: 3px 5px 18px rgba(0, 0, 0, 0.45);
+  border-radius: 2px;
+}
+
+.collage-photo--1 { width: 160px; top:  4%;  left:  1%;   transform: rotate(-14deg); }
+.collage-photo--2 { width: 140px; top:  6%;  right: 2%;   transform: rotate(10deg);  }
+.collage-photo--3 { width: 155px; top: 36%;  left:  0.5%; transform: rotate(-7deg);  }
+.collage-photo--4 { width: 145px; top: 40%;  right: 1%;   transform: rotate(13deg);  }
+.collage-photo--5 { width: 135px; top: 70%;  left:  4%;   transform: rotate(-19deg); }
+.collage-photo--6 { width: 150px; top: 75%;  right: 3%;   transform: rotate(7deg);   }
