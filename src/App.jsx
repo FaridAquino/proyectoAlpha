@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useGSAP } from '@gsap/react';
@@ -19,6 +19,7 @@ const COLLAGE_COUNT = 6;
 
 function App() {
   const collageRef = useRef(null);
+  const [videoEnded, setVideoEnded] = useState(false);
 
   useGSAP((_, contextSafe) => {
     const startFloating = contextSafe(() => {
@@ -50,7 +51,7 @@ function App() {
   return (
     <>
       <Confetti />
-      <VideoIntro />
+      <VideoIntro onEnd={() => setVideoEnded(true)} />
       <FlowerCanvas />
       <main className="main-content">
         <div ref={collageRef} className="page-collage" aria-hidden="true">
@@ -63,7 +64,7 @@ function App() {
             />
           ))}
         </div>
-        <HeroSection />
+        <HeroSection videoEnded={videoEnded} />
         <section className="gallery-section" aria-label="Galería de fotos">
           <div className="gallery-section__header">
             <p className="gallery-section__eyebrow">✦ Momentos especiales ✦</p>
@@ -72,6 +73,14 @@ function App() {
           </div>
           <div className="gallery-canvas-wrapper">
             <CircularGallery
+              items={[
+                { image: '/proyectoAlpha/images/Espacio1.jpg', text: 'Nebulosa de Orión' },
+                { image: '/proyectoAlpha/images/Espacio2.jpg', text: 'Senda de la Vía Láctea' },
+                { image: '/proyectoAlpha/images/Espacio3.jpg', text: 'Lluvia de Estrellas' },
+                { image: '/proyectoAlpha/images/Espacio4.jpg', text: 'Galaxia de Andrómeda' },
+                { image: '/proyectoAlpha/images/Espacio5.jpg', text: 'Polvo Cósmico' },
+                { image: '/proyectoAlpha/images/Espacio6.jpg', text: 'Aurora Estelar' },
+              ]}
               bend={3}
               textColor="#FFE135"
               borderRadius={0.05}
