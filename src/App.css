@@ -1,7 +1,6 @@
 .main-content {
   position: relative;
   z-index: 1;
-  margin-top: 100vh;
   background: var(--bg);
   background-image:
     radial-gradient(ellipse 80% 40% at 50% 0%, rgba(255, 225, 53, 0.07) 0%, transparent 60%),

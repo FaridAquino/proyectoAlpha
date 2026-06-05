@@ -35,23 +35,12 @@
 
 .hero__title-main {
   display: block;
-  background-image: url('/proyectoAlpha/images/fondoPeriodico.webp');
-  background-size: cover;
-  background-position: center 30%;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: var(--accent-banana);
 }
 
 .hero__title-accent {
   display: block;
-  font-style: italic;
-  background-image: url('/proyectoAlpha/images/fondoPeriodico.webp');
-  background-size: cover;
-  background-position: center 70%;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: var(--accent-cream);
 }
 
 .hero__subtitle {

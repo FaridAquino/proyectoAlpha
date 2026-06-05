@@ -1,13 +1,20 @@
-import { useRef } from 'react';
+import { useRef, useMemo } from 'react';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { TegakiRenderer } from 'tegaki/react';
+import caveat from 'tegaki/fonts/caveat';
 import './HeroSection.css';
 
 gsap.registerPlugin(ScrollTrigger);
 
-export default function HeroSection() {
+export default function HeroSection({ videoEnded = false }) {
   const sectionRef = useRef(null);
+
+  const titleTime = useMemo(
+    () => ({ mode: 'uncontrolled', playing: videoEnded, speed: 1.3 }),
+    [videoEnded]
+  );
 
   useGSAP((_, contextSafe) => {
     const startFloating = contextSafe(() => {
@@ -85,8 +92,16 @@ export default function HeroSection() {
         <p className="hero__eyebrow">✦ Un día muy especial ✦</p>
 
         <h1 className="hero__title">
-          <span className="hero__title-main">¡Feliz</span>
-          <span className="hero__title-accent"> Cumpleaños!</span>
+          <span className="hero__title-main">
+            <TegakiRenderer font={caveat} time={titleTime} style={{ fontSize: 'inherit', color: 'inherit' }}>
+              Feliz
+            </TegakiRenderer>
+          </span>
+          <span className="hero__title-accent">
+            <TegakiRenderer font={caveat} time={titleTime} style={{ fontSize: 'inherit', color: 'inherit' }}>
+              cumple!
+            </TegakiRenderer>
+          </span>
         </h1>
 
         <p className="hero__subtitle">

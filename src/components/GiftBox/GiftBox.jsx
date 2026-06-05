@@ -1,15 +1,15 @@
-import { useRef } from 'react';
+import { useRef, useState, useMemo } from 'react';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { TegakiRenderer } from 'tegaki/react';
+import italianno from 'tegaki/fonts/italianno';
 import './GiftBox.css';
 
 gsap.registerPlugin(ScrollTrigger);
 
 const PARAGRAPHS = [
-  'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
-  'Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
-  'Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae. Proin vel ante a orci tempus eleifend ut et magna. Curabitur venenatis pretium libero, id faucibus nulla scelerisque.',
+  'Hola como estas?',
 ];
 
 export default function GiftBox() {
@@ -17,6 +17,14 @@ export default function GiftBox() {
   const isOpenRef = useRef(false);
   const openTlRef = useRef(null);
   const floatTweenRef = useRef(null);
+  const [boxOpen, setBoxOpen] = useState(false);
+  const [letterReady, setLetterReady] = useState(false);
+  const [openCount, setOpenCount] = useState(0);
+
+  const letterTime = useMemo(
+    () => ({ mode: 'uncontrolled', playing: letterReady, speed: 2.3 }),
+    [letterReady]
+  );
 
   useGSAP((_, contextSafe) => {
     // Posiciona shine centrado antes de cualquier animación
@@ -48,11 +56,14 @@ export default function GiftBox() {
     const openBox = contextSafe(() => {
       if (isOpenRef.current) return;
       isOpenRef.current = true;
+      setBoxOpen(true);
+      setLetterReady(false);
+      setOpenCount((c) => c + 1);
 
       floatTweenRef.current?.kill();
       gsap.set('.gift-box-group', { clearProps: 'y' });
 
-      openTlRef.current = gsap.timeline()
+      openTlRef.current = gsap.timeline({ onComplete: () => setLetterReady(true) })
         // Tapa se abre hacia atrás
         .to('.gift-lid', {
           rotateX: -130,
@@ -86,20 +97,26 @@ export default function GiftBox() {
           '-=0.2'
         )
         // Párrafos en cascada
-        .from('.letter-paragraph', {
-          opacity: 0,
-          y: 14,
-          stagger: 0.1,
-          duration: 0.45,
-          ease: 'power2.out',
-        }, '-=0.15');
+        .fromTo('.letter-paragraph',
+          { opacity: 0, y: 14 },
+          {
+            opacity: 1,
+            y: 0,
+            stagger: 0.1,
+            duration: 0.45,
+            ease: 'power2.out',
+          },
+          '-=0.15'
+        );
     });
 
     // --- Close ---
     const closeBox = contextSafe(() => {
       if (!isOpenRef.current || !openTlRef.current) return;
+      setLetterReady(false);
       openTlRef.current.reverse().then(() => {
         isOpenRef.current = false;
+        setBoxOpen(false);
         gsap.set('.letter-overlay', { pointerEvents: 'none' });
         floatTweenRef.current = gsap.to('.gift-box-group', {
           y: -10,
@@ -175,7 +192,13 @@ export default function GiftBox() {
           </div>
           <div className="letter-body-text">
             {PARAGRAPHS.map((p, i) => (
-              <p key={i} className="letter-paragraph">{p}</p>
+              <p key={i} className="letter-paragraph">
+                {boxOpen && (
+                  <TegakiRenderer key={openCount} font={italianno} time={letterTime} style={{ fontSize: '2.2rem', color: 'inherit' }}>
+                    {p}
+                  </TegakiRenderer>
+                )}
+              </p>
             ))}
           </div>
           <div className="letter-footer">

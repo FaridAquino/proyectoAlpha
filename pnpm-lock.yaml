@@ -23,6 +23,9 @@ importers:
       react-dom:
         specifier: ^19.2.6
         version: 19.2.6(react@19.2.6)
+      tegaki:
+        specifier: ^0.18.0
+        version: 0.18.0(react@19.2.6)
     devDependencies:
       '@eslint/js':
         specifier: ^10.0.1
@@ -913,6 +916,29 @@ packages:
     resolution: {integrity: sha512-k55yxKHwaXnpYGsOzg4Vl8+tDrWylxDEpknGjhTiZB8dFRU5rTo9CAzeycivxV3s+zlTKwrs6WxMxR95n26kwg==}
     engines: {node: '>=0.10.0'}
 
+  tegaki@0.18.0:
+    resolution: {integrity: sha512-iuKfmcRDoeQKu5pvqXm2aSpyIW/CNIcnnKm8ZTs2KSHWnexUpZubNFe1ADB2LKb34FW86DnJ3XMKwYQZ8xK05g==}
+    peerDependencies:
+      '@nuxt/kit': ^3.0.0 || ^4.0.0
+      harfbuzzjs: ^1.1.0
+      react: '>=18'
+      solid-js: '>=1'
+      svelte: '>=5'
+      vue: '>=3'
+    peerDependenciesMeta:
+      '@nuxt/kit':
+        optional: true
+      harfbuzzjs:
+        optional: true
+      react:
+        optional: true
+      solid-js:
+        optional: true
+      svelte:
+        optional: true
+      vue:
+        optional: true
+
   tinyglobby@0.2.17:
     resolution: {integrity: sha512-wXR/dYpcqKmfWpEdZjiKJOwCNFndD0DMnrW/cYjVGttEkBfVgcLFHoNrlj47mjOVic9yyNu65alsgF4NQyTa2g==}
     engines: {node: '>=12.0.0'}
@@ -1799,6 +1825,10 @@ snapshots:
   strip-outer@1.0.1:
     dependencies:
       escape-string-regexp: 1.0.5
+
+  tegaki@0.18.0(react@19.2.6):
+    optionalDependencies:
+      react: 19.2.6
 
   tinyglobby@0.2.17:
     dependencies:
