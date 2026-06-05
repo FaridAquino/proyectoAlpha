@@ -3,7 +3,8 @@ import { createFlower } from './flowerPhysics';
 import './FlowerCanvas.css';
 
 const MAX_FLOWERS = 45;
-const SPAWN_INTERVAL = 18; // frames entre spawns
+const SPAWN_INTERVAL = 18; // "frames" (a 60fps) entre spawns
+const BASE_DT = 1000 / 60; // referencia: 60 fps
 
 export default function FlowerCanvas() {
   const canvasRef = useRef(null);
@@ -13,7 +14,8 @@ export default function FlowerCanvas() {
     const ctx = canvas.getContext('2d');
     let rafId;
     let flowers = [];
-    let frame = 0;
+    let lastTime = performance.now();
+    let spawnAcc = 0;
 
     function resize() {
       canvas.width = window.innerWidth;
@@ -33,22 +35,27 @@ export default function FlowerCanvas() {
 
     window.addEventListener('resize', onResize);
 
-    function loop() {
+    function loop(now) {
+      // factor normalizado a 60fps; clamp para evitar saltos al reenfocar pestaña
+      const dt = Math.min((now - lastTime) / BASE_DT, 3);
+      lastTime = now;
+
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      // generar nueva flor
-      if (frame % SPAWN_INTERVAL === 0 && flowers.length < MAX_FLOWERS) {
+      // generar nueva flor (cadencia por tiempo, no por frame)
+      spawnAcc += dt;
+      if (spawnAcc >= SPAWN_INTERVAL && flowers.length < MAX_FLOWERS) {
+        spawnAcc -= SPAWN_INTERVAL;
         flowers.push(createFlower(canvas.width));
       }
 
       // actualizar y dibujar
       flowers = flowers.filter(f => !f.isOffscreen(canvas.height));
       for (const flower of flowers) {
-        flower.update();
+        flower.update(dt);
         flower.draw(ctx);
       }
 
-      frame++;
       rafId = requestAnimationFrame(loop);
     }
 

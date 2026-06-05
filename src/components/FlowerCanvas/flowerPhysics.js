@@ -15,12 +15,12 @@ class Flower {
     this.canvasWidth = canvasWidth;
   }
 
-  update() {
-    this.tick++;
-    this.velY += 0.012;
-    this.y += this.velY;
-    this.x += this.velX + Math.sin(this.tick * this.wobbleSpeed + this.wobbleOffset) * this.wobbleAmp;
-    this.rotation += this.rotationSpeed;
+  update(dt = 1) {
+    this.tick += dt;
+    this.velY += 0.012 * dt;
+    this.y += this.velY * dt;
+    this.x += (this.velX + Math.sin(this.tick * this.wobbleSpeed + this.wobbleOffset) * this.wobbleAmp) * dt;
+    this.rotation += this.rotationSpeed * dt;
   }
 
   isOffscreen(canvasHeight) {
