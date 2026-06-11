@@ -1,0 +1,255 @@
+/* ── Sección ── */
+.candles-section {
+  position: relative;
+  padding: 7rem 2rem 4rem;
+  text-align: center;
+}
+
+.candles-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.6rem;
+}
+
+.candles-eyebrow {
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--accent-banana);
+  margin: 0;
+}
+
+.candles-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.8rem, 4vw, 3rem);
+  color: var(--text-h);
+  margin: 0;
+}
+
+/* ── Escenario presionable ── */
+.candles-stage {
+  cursor: pointer;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  padding: 1.5rem 2rem 0.5rem;
+  border-radius: 1rem;
+  outline-offset: 4px;
+  transition: filter 0.2s;
+}
+
+.candles-stage:hover {
+  filter: drop-shadow(0 0 26px rgba(255, 225, 53, 0.25));
+}
+
+.candles-stage:focus-visible {
+  outline: 2px solid var(--accent-banana);
+}
+
+/* ── Pastel ── */
+.cake {
+  position: relative;
+  width: 260px;
+}
+
+.cake__candles {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  gap: 20px;
+  height: 92px;
+  margin-bottom: -6px;
+}
+
+.candle {
+  position: relative;
+  width: 12px;
+  height: var(--candle-h, 50px);
+}
+
+.candle__body {
+  width: 100%;
+  height: 100%;
+  border-radius: 3px 3px 1px 1px;
+  background: repeating-linear-gradient(
+    -45deg,
+    var(--accent-cream) 0 6px,
+    var(--accent-banana) 6px 12px
+  );
+  box-shadow: inset -2px 0 3px rgba(0, 0, 0, 0.18);
+}
+
+.candle__wick {
+  position: absolute;
+  top: -7px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 2px;
+  height: 8px;
+  background: #5a4632;
+  border-radius: 1px;
+}
+
+.candle__flame {
+  position: absolute;
+  top: -27px;
+  left: 50%;
+  margin-left: -7px;
+  width: 14px;
+  height: 22px;
+  background: radial-gradient(
+    circle at 50% 72%,
+    #FFFBE8 0%,
+    #FFE787 38%,
+    #FFB347 68%,
+    rgba(245, 110, 30, 0.85) 88%,
+    transparent 100%
+  );
+  border-radius: 50% 50% 48% 52% / 64% 64% 36% 36%;
+  box-shadow:
+    0 0 14px 4px rgba(255, 190, 70, 0.55),
+    0 0 36px 10px rgba(255, 160, 40, 0.22);
+  transform-origin: 50% 100%;
+}
+
+.candle__smoke {
+  position: absolute;
+  top: -30px;
+  left: 50%;
+  margin-left: -6px;
+  width: 12px;
+  height: 18px;
+  border-radius: 50%;
+  background: rgba(205, 200, 190, 0.7);
+  filter: blur(4px);
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* ── Pisos del pastel ── */
+.cake__tier {
+  position: relative;
+  margin: 0 auto;
+}
+
+.cake__tier--top {
+  width: 158px;
+  height: 56px;
+  background: linear-gradient(160deg, var(--accent-warm) 0%, var(--accent-gold) 100%);
+  border-radius: 8px 8px 4px 4px;
+  z-index: 1;
+  box-shadow: 0 4px 0 rgba(0, 0, 0, 0.1);
+}
+
+/* glaseado del piso superior */
+.cake__tier--top::before {
+  content: '';
+  position: absolute;
+  top: -6px;
+  left: -5px;
+  right: -5px;
+  height: 20px;
+  background: var(--accent-cream);
+  border-radius: 12px 12px 46% 46%;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.12);
+}
+
+.cake__tier--bottom {
+  width: 224px;
+  height: 66px;
+  margin-top: -4px;
+  background: linear-gradient(160deg, var(--accent-banana) 0%, #E0A800 100%);
+  border-radius: 8px 8px 10px 10px;
+  box-shadow: 0 6px 0 rgba(0, 0, 0, 0.1);
+}
+
+.cake__tier--bottom::before {
+  content: '';
+  position: absolute;
+  top: -6px;
+  left: -6px;
+  right: -6px;
+  height: 22px;
+  background: var(--accent-cream);
+  border-radius: 12px 12px 46% 46%;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.12);
+}
+
+.cake__plate {
+  width: 258px;
+  height: 16px;
+  margin: -2px auto 0;
+  border-radius: 50%;
+  background: rgba(255, 248, 231, 0.16);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
+}
+
+/* ── Barra de soplido ── */
+.blow-progress {
+  width: 176px;
+  height: 5px;
+  margin: 1.6rem auto 0;
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.12);
+  overflow: hidden;
+}
+
+.blow-progress__fill {
+  width: 100%;
+  height: 100%;
+  border-radius: 3px;
+  background: linear-gradient(90deg, var(--accent-banana), var(--accent-gold));
+}
+
+/* ── Textos ── */
+.candles-hint {
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.4);
+  letter-spacing: 0.06em;
+  margin: 0;
+}
+
+.candles-wish {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: clamp(1.5rem, 4vw, 2.2rem);
+  color: var(--accent-banana);
+  margin: -0.6rem 0 0;
+}
+
+.candles-relight {
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  letter-spacing: 0.04em;
+  color: var(--accent-cream);
+  background: transparent;
+  border: 1px solid rgba(255, 225, 53, 0.45);
+  border-radius: 999px;
+  padding: 0.6rem 1.5rem;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.candles-relight:hover {
+  background: rgba(255, 225, 53, 0.12);
+  border-color: var(--accent-banana);
+}
+
+/* ── Responsive ── */
+@media (max-width: 640px) {
+  .candles-section {
+    padding: 5rem 1.25rem 3rem;
+  }
+
+  .cake {
+    transform: scale(0.85);
+    transform-origin: top center;
+    margin-bottom: -28px;
+  }
+}

@@ -1,4 +1,4 @@
-import { useRef, useState, useMemo } from 'react';
+import { useRef, useState, useMemo, useEffect } from 'react';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -12,9 +12,10 @@ const PARAGRAPHS = [
   'Hola como estas?',
 ];
 
-export default function GiftBox() {
+export default function GiftBox({ onOpen }) {
   const sectionRef = useRef(null);
   const isOpenRef = useRef(false);
+  const onOpenRef = useRef(null);
   const openTlRef = useRef(null);
   const floatTweenRef = useRef(null);
   const [boxOpen, setBoxOpen] = useState(false);
@@ -26,7 +27,13 @@ export default function GiftBox() {
     [letterReady]
   );
 
+  useEffect(() => {
+    onOpenRef.current = onOpen;
+  });
+
   useGSAP((_, contextSafe) => {
+    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
     // Posiciona shine centrado antes de cualquier animación
     gsap.set('.gift-shine', { xPercent: -50, yPercent: -50, scale: 0, opacity: 0 });
     gsap.set('.letter-peek', { xPercent: -50 });
@@ -34,8 +41,8 @@ export default function GiftBox() {
     // Entrada con ScrollTrigger
     gsap.from('.gift-wrapper', {
       opacity: 0,
-      y: 70,
-      duration: 1.1,
+      y: prefersReduced ? 0 : 70,
+      duration: prefersReduced ? 0.4 : 1.1,
       ease: 'power3.out',
       scrollTrigger: {
         trigger: sectionRef.current,
@@ -44,13 +51,15 @@ export default function GiftBox() {
     });
 
     // Flotado idle
-    floatTweenRef.current = gsap.to('.gift-box-group', {
-      y: -10,
-      duration: 2,
-      ease: 'sine.inOut',
-      yoyo: true,
-      repeat: -1,
-    });
+    if (!prefersReduced) {
+      floatTweenRef.current = gsap.to('.gift-box-group', {
+        y: -10,
+        duration: 2,
+        ease: 'sine.inOut',
+        yoyo: true,
+        repeat: -1,
+      });
+    }
 
     // --- Open ---
     const openBox = contextSafe(() => {
@@ -59,6 +68,7 @@ export default function GiftBox() {
       setBoxOpen(true);
       setLetterReady(false);
       setOpenCount((c) => c + 1);
+      onOpenRef.current?.();
 
       floatTweenRef.current?.kill();
       gsap.set('.gift-box-group', { clearProps: 'y' });
@@ -118,13 +128,15 @@ export default function GiftBox() {
         isOpenRef.current = false;
         setBoxOpen(false);
         gsap.set('.letter-overlay', { pointerEvents: 'none' });
-        floatTweenRef.current = gsap.to('.gift-box-group', {
-          y: -10,
-          duration: 2,
-          ease: 'sine.inOut',
-          yoyo: true,
-          repeat: -1,
-        });
+        if (!prefersReduced) {
+          floatTweenRef.current = gsap.to('.gift-box-group', {
+            y: -10,
+            duration: 2,
+            ease: 'sine.inOut',
+            yoyo: true,
+            repeat: -1,
+          });
+        }
       });
     });
 
@@ -192,13 +204,14 @@ export default function GiftBox() {
           </div>
           <div className="letter-body-text">
             {PARAGRAPHS.map((p, i) => (
-              <p key={i} className="letter-paragraph">
+              // div, no <p>: Tegaki renderiza un <div> interno y anidarlo en <p> es HTML inválido
+              <div key={i} className="letter-paragraph">
                 {boxOpen && (
                   <TegakiRenderer key={openCount} font={italianno} time={letterTime} style={{ fontSize: '2.2rem', color: 'inherit' }}>
                     {p}
                   </TegakiRenderer>
                 )}
-              </p>
+              </div>
             ))}
           </div>
           <div className="letter-footer">

@@ -29,3 +29,29 @@
 .collage-photo--4 { width: 145px; top: 40%;  right: 1%;   transform: rotate(13deg);  }
 .collage-photo--5 { width: 135px; top: 70%;  left:  4%;   transform: rotate(-19deg); }
 .collage-photo--6 { width: 150px; top: 75%;  right: 3%;   transform: rotate(7deg);   }
+
+@media (max-width: 768px) {
+  .collage-photo {
+    border-width: 4px;
+  }
+
+  .collage-photo--1 { width: 105px; left: -1.5%; }
+  .collage-photo--2 { width: 95px;  right: -1%;  }
+  .collage-photo--3 { width: 100px; left: -2%;   }
+  .collage-photo--4 { width: 95px;  right: -2%;  }
+  .collage-photo--5 { width: 90px;  left:  0.5%; }
+  .collage-photo--6 { width: 100px; right: 0.5%; }
+}
+
+@media (max-width: 480px) {
+  /* las del medio chocan con el texto del hero */
+  .collage-photo--3,
+  .collage-photo--4 {
+    display: none;
+  }
+
+  .collage-photo--1 { width: 84px; top: 2%;  left: -3%;  }
+  .collage-photo--2 { width: 76px; top: 3%;  right: -3%; }
+  .collage-photo--5 { width: 72px; top: 76%; left: -2%;  }
+  .collage-photo--6 { width: 80px; top: 80%; right: -2%; }
+}

@@ -344,10 +344,12 @@ class Media {
 class App {
   constructor(container, {
     items, bend, textColor = '#ffffff', borderRadius = 0,
-    font = 'bold 30px Figtree', scrollSpeed = 2, scrollEase = 0.05
+    font = 'bold 30px Figtree', scrollSpeed = 2, scrollEase = 0.05,
+    onItemClick = null
   } = {}) {
     document.documentElement.classList.remove('no-js');
     this.container = container;
+    this.onItemClick = onItemClick;
     this.scrollSpeed = scrollSpeed;
     this.scroll = { ease: scrollEase, current: 0, target: 0, last: 0 };
     this.onCheckDebounce = debounce(this.onCheck, 200);
@@ -408,16 +410,40 @@ class App {
     this.isDown = true;
     this.scroll.position = this.scroll.current;
     this.start = e.touches ? e.touches[0].clientX : e.clientX;
+    this.moved = 0;
+    this.downInside = this.container.contains(e.target);
   }
   onTouchMove(e) {
     if (!this.isDown) return;
     const x = e.touches ? e.touches[0].clientX : e.clientX;
+    this.moved = Math.max(this.moved || 0, Math.abs(this.start - x));
     const distance = (this.start - x) * (this.scrollSpeed * 0.025);
     this.scroll.target = this.scroll.position + distance;
   }
-  onTouchUp() {
+  onTouchUp(e) {
+    const wasClick = this.isDown && this.downInside && (this.moved || 0) < 8;
     this.isDown = false;
     this.onCheck();
+    if (wasClick) this.handleClick(e);
+  }
+  handleClick(e) {
+    if (!this.onItemClick || !this.medias) return;
+    const source = e.changedTouches ? e.changedTouches[0] : e;
+    const rect = this.container.getBoundingClientRect();
+    // pasa el punto de click a coordenadas de mundo del plano z=0
+    const worldX = ((source.clientX - rect.left) / this.screen.width - 0.5) * this.viewport.width;
+    const worldY = -((source.clientY - rect.top) / this.screen.height - 0.5) * this.viewport.height;
+    let best = null;
+    let bestDist = Infinity;
+    for (const media of this.medias) {
+      const dx = Math.abs(worldX - media.plane.position.x);
+      const dy = Math.abs(worldY - media.plane.position.y);
+      if (dx <= media.plane.scale.x / 2 && dy <= media.plane.scale.y / 2 && dx < bestDist) {
+        bestDist = dx;
+        best = media;
+      }
+    }
+    if (best) this.onItemClick({ image: best.image, text: best.text });
   }
   onWheel(e) {
     const delta = e.deltaY || e.wheelDelta || e.detail;
@@ -494,9 +520,15 @@ export default function CircularGallery({
   font = 'bold 30px Figtree',
   fontUrl,
   scrollSpeed = 2,
-  scrollEase = 0.05
+  scrollEase = 0.05,
+  onItemClick
 }) {
   const containerRef = useRef(null);
+  // ref para no recrear el WebGL app cuando cambia el callback
+  const onItemClickRef = useRef(null);
+  useEffect(() => {
+    onItemClickRef.current = onItemClick;
+  });
   useEffect(() => {
     if (!containerRef.current) return;
     let app;
@@ -505,7 +537,8 @@ export default function CircularGallery({
       if (!isMounted || !containerRef.current) return;
       app = new App(containerRef.current, {
         items, bend, textColor, borderRadius,
-        font: resolvedFont, scrollSpeed, scrollEase
+        font: resolvedFont, scrollSpeed, scrollEase,
+        onItemClick: item => onItemClickRef.current?.(item)
       });
     });
     return () => {

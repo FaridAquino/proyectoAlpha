@@ -1,11 +1,17 @@
 const TWO_PI = Math.PI * 2;
 
+const POINTER_RADIUS = 120;
+const POINTER_FORCE = 0.55;
+const PUSH_DECAY = 0.94; // factor de decaimiento por frame (a 60fps)
+
 class Flower {
   constructor(x, canvasWidth) {
     this.x = x;
     this.y = -20;
     this.velY = 0.6 + Math.random() * 1.2;
     this.velX = (Math.random() - 0.5) * 0.8;
+    this.pushX = 0;
+    this.pushY = 0;
     this.wobbleOffset = Math.random() * TWO_PI;
     this.wobbleSpeed = 0.02 + Math.random() * 0.03;
     this.wobbleAmp = 1.5 + Math.random() * 2.5;
@@ -15,11 +21,30 @@ class Flower {
     this.canvasWidth = canvasWidth;
   }
 
-  update(dt = 1) {
+  applyPointer(pointer, dt) {
+    if (!pointer) return;
+    const dx = this.x - pointer.x;
+    const dy = this.y - pointer.y;
+    const distSq = dx * dx + dy * dy;
+    if (distSq >= POINTER_RADIUS * POINTER_RADIUS || distSq < 0.01) return;
+    const dist = Math.sqrt(distSq);
+    const force = (1 - dist / POINTER_RADIUS) * POINTER_FORCE * dt;
+    this.pushX += (dx / dist) * force;
+    this.pushY += (dy / dist) * force * 0.45;
+  }
+
+  update(dt = 1, pointer = null) {
     this.tick += dt;
+    this.applyPointer(pointer, dt);
+
+    // el empuje se disipa para volver a la caída natural
+    const decay = Math.pow(PUSH_DECAY, dt);
+    this.pushX *= decay;
+    this.pushY *= decay;
+
     this.velY += 0.012 * dt;
-    this.y += this.velY * dt;
-    this.x += (this.velX + Math.sin(this.tick * this.wobbleSpeed + this.wobbleOffset) * this.wobbleAmp) * dt;
+    this.y += (this.velY + this.pushY) * dt;
+    this.x += (this.velX + this.pushX + Math.sin(this.tick * this.wobbleSpeed + this.wobbleOffset) * this.wobbleAmp) * dt;
     this.rotation += this.rotationSpeed * dt;
   }
 
@@ -111,4 +136,20 @@ export function createFlower(canvasWidth) {
   return Math.random() < 0.3
     ? new Sunflower(x, canvasWidth)
     : new Jasmine(x, canvasWidth);
+}
+
+export function createBurstFlower(x, y, canvasWidth) {
+  const flower = Math.random() < 0.4
+    ? new Sunflower(x, canvasWidth)
+    : new Jasmine(x, canvasWidth);
+
+  // impulso radial que se disipa solo; luego la gravedad la hace caer
+  const angle = Math.random() * TWO_PI;
+  const speed = 3 + Math.random() * 4;
+  flower.y = y;
+  flower.pushX = Math.cos(angle) * speed;
+  flower.pushY = Math.sin(angle) * speed - 2;
+  flower.velY = 0.2 + Math.random() * 0.5;
+  flower.rotationSpeed = (Math.random() - 0.5) * 0.12;
+  return flower;
 }

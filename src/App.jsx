@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useRef, useState, useCallback } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useGSAP } from '@gsap/react';
@@ -8,7 +8,10 @@ import FlowerCanvas from './components/FlowerCanvas/FlowerCanvas';
 import HeroSection from './components/HeroSection/HeroSection';
 import CircularGallery from './components/CircularGallery/CircularGallery';
 import Confetti from './components/Confetti/Confetti';
+import CandlesSection from './components/CandlesSection/CandlesSection';
 import GiftBox from './components/GiftBox/GiftBox';
+import Lightbox from './components/Lightbox/Lightbox';
+import MusicToggle from './components/MusicToggle/MusicToggle';
 
 import './App.css';
 
@@ -17,12 +20,37 @@ gsap.registerPlugin(ScrollTrigger, useGSAP);
 const COLLAGE_SRC = '/proyectoAlpha/images/girasol1.png';
 const COLLAGE_COUNT = 6;
 
+// constante de módulo: si fuera inline, cada re-render de App
+// destruiría y recrearía el canvas WebGL de la galería
+const GALLERY_ITEMS = [
+  { image: '/proyectoAlpha/images/Espacio1.jpg', text: 'Nebulosa de Orión' },
+  { image: '/proyectoAlpha/images/Espacio2.jpg', text: 'Senda de la Vía Láctea' },
+  { image: '/proyectoAlpha/images/Espacio3.jpg', text: 'Lluvia de Estrellas' },
+  { image: '/proyectoAlpha/images/Espacio4.jpg', text: 'Galaxia de Andrómeda' },
+  { image: '/proyectoAlpha/images/Espacio5.jpg', text: 'Polvo Cósmico' },
+  { image: '/proyectoAlpha/images/Espacio6.jpg', text: 'Aurora Estelar' },
+];
+
 function App() {
   const collageRef = useRef(null);
   const [videoEnded, setVideoEnded] = useState(false);
+  const [confettiBurst, setConfettiBurst] = useState(0);
+  const [lightboxItem, setLightboxItem] = useState(null);
+
+  const fireConfetti = useCallback(() => setConfettiBurst((c) => c + 1), []);
+  const closeLightbox = useCallback(() => setLightboxItem(null), []);
+
+  const handleVideoEnd = useCallback(() => {
+    setVideoEnded(true);
+    // primera lluvia de confetti recién ahora, que ya se ve la página
+    setConfettiBurst((c) => c + 1);
+  }, []);
 
   useGSAP((_, contextSafe) => {
+    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
     const startFloating = contextSafe(() => {
+      if (prefersReduced) return;
       const photos = collageRef.current.querySelectorAll('.collage-photo');
       photos.forEach((el, i) => {
         gsap.to(el, {
@@ -38,11 +66,11 @@ function App() {
 
     gsap.timeline({ onComplete: startFloating })
       .from('.collage-photo', {
-        y: -140,
+        y: prefersReduced ? 0 : -140,
         opacity: 0,
-        rotation: (i) => i % 2 === 0 ? -28 : 28,
-        duration: 1.2,
-        stagger: 0.16,
+        rotation: prefersReduced ? 0 : (i) => i % 2 === 0 ? -28 : 28,
+        duration: prefersReduced ? 0.5 : 1.2,
+        stagger: prefersReduced ? 0 : 0.16,
         ease: 'back.out(1.5)',
         delay: 0.4,
       });
@@ -50,9 +78,10 @@ function App() {
 
   return (
     <>
-      <Confetti />
-      <VideoIntro onEnd={() => setVideoEnded(true)} />
+      <Confetti burst={confettiBurst} />
+      <VideoIntro onEnd={handleVideoEnd} />
       <FlowerCanvas />
+      <MusicToggle autoStart={videoEnded} />
       <main className="main-content">
         <div ref={collageRef} className="page-collage" aria-hidden="true">
           {Array.from({ length: COLLAGE_COUNT }, (_, i) => (
@@ -69,29 +98,25 @@ function App() {
           <div className="gallery-section__header">
             <p className="gallery-section__eyebrow">✦ Momentos especiales ✦</p>
             <h2 className="gallery-section__title">Recuerdos que guardamos</h2>
-            <p className="gallery-section__hint">Arrastra o desplázate para explorar</p>
+            <p className="gallery-section__hint">Arrastra para explorar · toca una foto para ampliarla</p>
           </div>
           <div className="gallery-canvas-wrapper">
             <CircularGallery
-              items={[
-                { image: '/proyectoAlpha/images/Espacio1.jpg', text: 'Nebulosa de Orión' },
-                { image: '/proyectoAlpha/images/Espacio2.jpg', text: 'Senda de la Vía Láctea' },
-                { image: '/proyectoAlpha/images/Espacio3.jpg', text: 'Lluvia de Estrellas' },
-                { image: '/proyectoAlpha/images/Espacio4.jpg', text: 'Galaxia de Andrómeda' },
-                { image: '/proyectoAlpha/images/Espacio5.jpg', text: 'Polvo Cósmico' },
-                { image: '/proyectoAlpha/images/Espacio6.jpg', text: 'Aurora Estelar' },
-              ]}
+              items={GALLERY_ITEMS}
               bend={3}
               textColor="#FFE135"
               borderRadius={0.05}
               scrollEase={0.03}
               font="bold 26px 'Playfair Display', Georgia, serif"
               fontUrl="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&display=swap"
+              onItemClick={setLightboxItem}
             />
           </div>
         </section>
-        <GiftBox />
+        <CandlesSection onAllOut={fireConfetti} />
+        <GiftBox onOpen={fireConfetti} />
       </main>
+      <Lightbox item={lightboxItem} onClose={closeLightbox} />
     </>
   );
 }

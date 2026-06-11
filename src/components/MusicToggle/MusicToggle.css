@@ -1,0 +1,88 @@
+.music-toggle {
+  position: fixed;
+  bottom: 1.4rem;
+  right: 1.4rem;
+  z-index: 180; /* debajo del overlay de carta (200) */
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: rgba(28, 26, 20, 0.85);
+  border: 1px solid rgba(255, 225, 53, 0.45);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 6px 22px rgba(0, 0, 0, 0.4);
+  transition: border-color 0.2s, transform 0.2s;
+}
+
+.music-toggle:hover {
+  border-color: var(--accent-banana);
+  transform: scale(1.08);
+}
+
+/* pulso de invitación cuando el autoplay fue bloqueado */
+.music-toggle.is-inviting::before {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 225, 53, 0.6);
+  animation: music-invite 1.6s ease-out infinite;
+}
+
+@keyframes music-invite {
+  0%   { transform: scale(1);    opacity: 1; }
+  100% { transform: scale(1.55); opacity: 0; }
+}
+
+/* barras de ecualizador */
+.music-toggle__bars {
+  display: flex;
+  align-items: flex-end;
+  gap: 3px;
+  height: 18px;
+}
+
+.music-toggle__bars i {
+  display: block;
+  width: 3.5px;
+  border-radius: 2px;
+  background: var(--accent-banana);
+  height: 30%;
+  animation: music-eq 0.9s ease-in-out infinite;
+  animation-play-state: paused;
+}
+
+.music-toggle__bars i:nth-child(1) { animation-delay: 0s;    }
+.music-toggle__bars i:nth-child(2) { animation-delay: 0.25s; height: 60%; }
+.music-toggle__bars i:nth-child(3) { animation-delay: 0.5s;  height: 45%; }
+
+.music-toggle.is-playing .music-toggle__bars i {
+  animation-play-state: running;
+}
+
+@keyframes music-eq {
+  0%, 100% { height: 25%; }
+  50%      { height: 100%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .music-toggle.is-inviting::before,
+  .music-toggle.is-playing .music-toggle__bars i {
+    animation: none;
+  }
+
+  .music-toggle.is-playing .music-toggle__bars i {
+    height: 80%;
+  }
+}
+
+@media (max-width: 640px) {
+  .music-toggle {
+    width: 44px;
+    height: 44px;
+    bottom: 1rem;
+    right: 1rem;
+  }
+}

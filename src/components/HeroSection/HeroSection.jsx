@@ -2,11 +2,12 @@ import { useRef, useMemo } from 'react';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { SplitText } from 'gsap/SplitText';
 import { TegakiRenderer } from 'tegaki/react';
 import caveat from 'tegaki/fonts/caveat';
 import './HeroSection.css';
 
-gsap.registerPlugin(ScrollTrigger);
+gsap.registerPlugin(ScrollTrigger, SplitText);
 
 export default function HeroSection({ videoEnded = false }) {
   const sectionRef = useRef(null);
@@ -17,7 +18,10 @@ export default function HeroSection({ videoEnded = false }) {
   );
 
   useGSAP((_, contextSafe) => {
+    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
     const startFloating = contextSafe(() => {
+      if (prefersReduced) return;
       const ornaments = sectionRef.current.querySelectorAll('.hero__ornament');
       ornaments.forEach((el, i) => {
         gsap.to(el, {
@@ -31,6 +35,14 @@ export default function HeroSection({ videoEnded = false }) {
         });
       });
     });
+
+    // subtítulo y mensaje aparecen palabra por palabra
+    let subtitleSplit = null;
+    let messageSplit = null;
+    if (!prefersReduced) {
+      subtitleSplit = new SplitText(sectionRef.current.querySelector('.hero__subtitle'), { type: 'words' });
+      messageSplit = new SplitText(sectionRef.current.querySelector('.hero__message'), { type: 'words' });
+    }
 
     const tl = gsap.timeline({
       scrollTrigger: {
@@ -59,10 +71,11 @@ export default function HeroSection({ videoEnded = false }) {
         duration: 0.9,
         ease: 'power3.out',
       }, '-=0.6')
-      .from('.hero__subtitle', {
+      .from(subtitleSplit ? subtitleSplit.words : '.hero__subtitle', {
         opacity: 0,
-        y: 24,
-        duration: 0.7,
+        y: subtitleSplit ? 22 : 0,
+        duration: subtitleSplit ? 0.55 : 0.5,
+        stagger: subtitleSplit ? 0.045 : 0,
         ease: 'power2.out',
       }, '-=0.4')
       .from('.hero__divider', {
@@ -71,19 +84,25 @@ export default function HeroSection({ videoEnded = false }) {
         ease: 'power2.inOut',
         transformOrigin: 'center',
       }, '-=0.3')
-      .from('.hero__message', {
+      .from(messageSplit ? messageSplit.words : '.hero__message', {
         opacity: 0,
-        y: 20,
-        duration: 0.7,
+        y: messageSplit ? 16 : 0,
+        duration: messageSplit ? 0.45 : 0.5,
+        stagger: messageSplit ? 0.025 : 0,
         ease: 'power2.out',
       }, '-=0.4')
       .from('.hero__ornament', {
         opacity: 0,
-        scale: 0,
+        scale: prefersReduced ? 1 : 0,
         duration: 0.5,
-        stagger: 0.12,
+        stagger: prefersReduced ? 0 : 0.12,
         ease: 'back.out(1.7)',
       }, '-=0.5');
+
+    return () => {
+      subtitleSplit?.revert();
+      messageSplit?.revert();
+    };
   }, { scope: sectionRef });
 
   return (
