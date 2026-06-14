@@ -9,7 +9,7 @@ import './GiftBox.css';
 gsap.registerPlugin(ScrollTrigger);
 
 const PARAGRAPHS = [
-  'Hola, como te va? Espero que todo vaya bien, felicidades por tus 19 anios. Querida Abigail, espero que este "regalo" no te de un disgusto en este dia. Esto lo hice con los recuerdos que aun conservo de ti, de las memorias que como tu bien me enseniaste ps aprendi a valorar. Estoy agradecido por el tiempo que me diste es por ello que hago esto. Pasalo bien, con tus amigos, seres queiridos, mascotas y los astros. Yo desde aquí te deseo lo mejor y no puedo negar el deseo de verte. Pero bueno, eso es cosa mía. Feliz cumple Abigail, te desea Farid...',
+  'Hola, como te va? Espero que todo vaya bien, felicidades por tus 19 anios. Querida Abigail, espero que este "regalo" no te de un disgusto en este dia. Esto lo hice con los recuerdos que aun conservo de ti, de las memorias que como tu bien me enseniaste ps aprendi a valorar. Estoy agradecido por el tiempo que me diste es por ello que hago esto. Pasalo bien, con tus amigos, seres queiridos, mascotas y los astros. Yo desde aqui te deseo lo mejor y no puedo negar el deseo de verte. Pero bueno, eso es cosa mia. Feliz cumple Abigail, te desea Farid...',
 ];
 
 export default function GiftBox({ onOpen }) {
