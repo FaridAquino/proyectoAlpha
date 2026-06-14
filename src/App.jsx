@@ -23,12 +23,12 @@ const COLLAGE_COUNT = 6;
 // constante de módulo: si fuera inline, cada re-render de App
 // destruiría y recrearía el canvas WebGL de la galería
 const GALLERY_ITEMS = [
-  { image: '/proyectoAlpha/images/Espacio1.jpg', text: 'Nebulosa de Orión' },
-  { image: '/proyectoAlpha/images/Espacio2.jpg', text: 'Senda de la Vía Láctea' },
-  { image: '/proyectoAlpha/images/Espacio3.jpg', text: 'Lluvia de Estrellas' },
-  { image: '/proyectoAlpha/images/Espacio4.jpg', text: 'Galaxia de Andrómeda' },
-  { image: '/proyectoAlpha/images/Espacio5.jpg', text: 'Polvo Cósmico' },
-  { image: '/proyectoAlpha/images/Espacio6.jpg', text: 'Aurora Estelar' },
+  { image: '/proyectoAlpha/images/Espacio1.jpg', text: 'Nebulosa de Carina' },
+  { image: '/proyectoAlpha/images/Espacio2.jpg', text: 'Mosaico del Polo Norte' },
+  { image: '/proyectoAlpha/images/Espacio3.jpg', text: 'Nebulosa del Cangrejo' },
+  { image: '/proyectoAlpha/images/Espacio4.jpg', text: 'Cúmulo de galaxias de Virgo' },
+  { image: '/proyectoAlpha/images/Espacio5.jpg', text: 'Spaceship Earth' },
+  { image: '/proyectoAlpha/images/Espacio6.jpg', text: 'La Espada de Orión' },
 ];
 
 function App() {
@@ -97,8 +97,8 @@ function App() {
         <section className="gallery-section" aria-label="Galería de fotos">
           <div className="gallery-section__header">
             <p className="gallery-section__eyebrow">✦ Momentos especiales ✦</p>
-            <h2 className="gallery-section__title">Recuerdos que guardamos</h2>
-            <p className="gallery-section__hint">Arrastra para explorar · toca una foto para ampliarla</p>
+            <h2 className="gallery-section__title">Algunas fotos de la NASA</h2>
+            <p className="gallery-section__hint">Arrastra para explorar · quizás algun día será algo más que digital :b</p>
           </div>
           <div className="gallery-canvas-wrapper">
             <CircularGallery

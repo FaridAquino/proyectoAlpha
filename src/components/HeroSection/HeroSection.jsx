@@ -124,23 +124,24 @@ export default function HeroSection({ videoEnded = false }) {
         </h1>
 
         <p className="hero__subtitle">
-          Que este día esté lleno de alegría, amor y momentos que atesorar para siempre.
+          Un día más, un año más.... espero la pases bien junto a tus cercanos :)
         </p>
 
         <div className="hero__divider" role="presentation" />
 
         <p className="hero__message">
-          Cada momento contigo es un regalo. Que este cumpleaños marque el inicio de
-          tu mejor año, lleno de aventuras, risas y todo lo que mereces.
+          Ya sabrás quien soy, quizás veas esto y quizás no.
+          Deseo que te valle bien, que disfrutes de este día a pesar de no ser un feriado.
+          Deberían hacerlo feriado... 
         </p>
 
         <div className="hero__ornaments" aria-hidden="true">
           <span className="hero__ornament">🌻</span>
-          <span className="hero__ornament">✨</span>
+          <span className="hero__ornament">🌑</span>
           <span className="hero__ornament">🌸</span>
           <span className="hero__ornament">🎂</span>
           <span className="hero__ornament">🌸</span>
-          <span className="hero__ornament">✨</span>
+          <span className="hero__ornament">🌑</span>
           <span className="hero__ornament">🌻</span>
         </div>
       </div>

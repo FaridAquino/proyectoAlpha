@@ -229,7 +229,7 @@ export default function CandlesSection({ onAllOut }) {
           </div>
         </div>
 
-        <p className="candles-hint">Mantén presionado para soplar 💨</p>
+        <p className="candles-hint">Mantén presionado para soplar </p>
         <p className="candles-wish">¡Pide un deseo! ✨</p>
         <button className="candles-relight" onClick={relight}>Volver a encender 🔥</button>
       </div>
