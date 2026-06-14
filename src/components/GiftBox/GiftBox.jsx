@@ -9,7 +9,7 @@ import './GiftBox.css';
 gsap.registerPlugin(ScrollTrigger);
 
 const PARAGRAPHS = [
-  'Hola como estas?',
+  'Hola, como te va? Espero que todo vaya bien, felicidades por tus 19 anios. Querida Abigail, espero que este "regalo" no te de un disgusto en este dia. Esto lo hice con los recuerdos que aun conservo de ti, de las memorias que como tu bien me enseniaste ps aprendi a valorar. Estoy agradecido por el tiempo que me diste es por ello que hago esto. Pasalo bien, con tus amigos, seres queiridos, mascotas y los astros. Yo desde aquí te deseo lo mejor y no puedo negar el deseo de verte. Pero bueno, eso es cosa mía. Feliz cumple Abigail, te desea Farid...',
 ];
 
 export default function GiftBox({ onOpen }) {
@@ -23,7 +23,7 @@ export default function GiftBox({ onOpen }) {
   const [openCount, setOpenCount] = useState(0);
 
   const letterTime = useMemo(
-    () => ({ mode: 'uncontrolled', playing: letterReady, speed: 2.3 }),
+    () => ({ mode: 'uncontrolled', playing: letterReady, speed: 3.5 }),
     [letterReady]
   );
 
@@ -200,7 +200,7 @@ export default function GiftBox({ onOpen }) {
           <button className="letter-close" aria-label="Cerrar carta">✕</button>
           <div className="letter-header">
             <div className="letter-seal">✦</div>
-            <h3 className="letter-greeting">Para ti, con cariño</h3>
+            <h3 className="letter-greeting">Para ti</h3>
           </div>
           <div className="letter-body-text">
             {PARAGRAPHS.map((p, i) => (
@@ -215,7 +215,7 @@ export default function GiftBox({ onOpen }) {
             ))}
           </div>
           <div className="letter-footer">
-            <span className="letter-signature">Con amor ♡</span>
+            <span className="letter-signature">Con aprecio :)</span>
           </div>
         </div>
       </div>
